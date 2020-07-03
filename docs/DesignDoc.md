@@ -64,4 +64,20 @@ Drawing will be allocated to their own threads. First the canvases will be made 
 
 An event loop will need to block the main thread. This loop will poll for events to send to the Canvases as long as there is still at least one active.
 
+In addition, it will be attempted to allow the user to modify the pixels
+
 ### Canvas Options
+The Canvas Base class will have certain properties that will be able to be modified:
+  * Activated/Visible - Will determine whether a window is able to be seem on the screen. If it is false, then the window is hidden.
+  * Framerate - The maximum amount of frames per second that the Canvas will run and update at.
+  * Window Size?
+  * Window Position
+  * Cursor Style - Either pre-defined cursors or custom cursors loaded from a file
+
+## Possible Additional Features
+The following features may be implemented later down the line, but no plans are currently made as to how that's going to be done:
+* Sound
+* Simple 3D drawing
+* Sprite Sheets
+* Model Loading
+* Saving canvas to pngs
