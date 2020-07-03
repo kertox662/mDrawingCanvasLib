@@ -12,7 +12,7 @@
   }
 </style>
 
-<span>test</span>
+<span style="color:red;">test</span>
 
 # mDrawingCanvasLib
 ### Draft Version  <ins> _0.0.1_ </ins>
