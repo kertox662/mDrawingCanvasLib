@@ -66,6 +66,13 @@ An event loop will need to block the main thread. This loop will poll for events
 
 In addition, it will be attempted to allow the user to modify the pixels
 
+### Events
+GLFW can emit many events, which this library will capture. The Canvas will have custom defined functions that will act as callbacks when the events are emitted. The events that will have functions associated with them are the following, subject to change:
+ * Mouse Movement
+ * Mouse Click/Press
+ * Key Press
+ * Window Focus?
+
 ### Canvas Options
 The Canvas Base class will have certain properties that will be able to be modified:
   * Activated/Visible - Will determine whether a window is able to be seem on the screen. If it is false, then the window is hidden.
