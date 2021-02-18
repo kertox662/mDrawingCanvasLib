@@ -12,6 +12,12 @@ struct GLFWInitFailureException : public std::exception {
     }
 };
 
+struct GLADInitFailureException : public std::exception {
+    const char* what() const throw (){
+        return "Glad was not able to load OpenGL functionality to the context.";
+    }
+};
+
 struct AlreadyInitializedException : public std::exception {
     const char* what() const throw (){
         return "Canvas::initializeCanvases has already been run.";

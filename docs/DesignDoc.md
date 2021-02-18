@@ -1,14 +1,14 @@
 <style>
   h1{
-    color:#54afbc;
+	color:#54afbc;
   }
 
   h2{
-    color:#70c19A
+	color:#70c19A
   }
 
   h3{
-    color:#ffb449
+	color:#ffb449
   }
 </style>
 

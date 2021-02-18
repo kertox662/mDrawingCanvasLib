@@ -1,14 +1,17 @@
 # General Variables
 CC := g++
+ARCHIVER := ar
 OBJDIR=build
 OBJS := $(addprefix $(OBJDIR)/,canvas.o image.o font.o drawing.o)
 LIBDIR=lib
-LIB_NAME=libmdcl.dylib
+LINKED=mdcl.o
+LIB_NAME=libmdcl.a
 STD=c++11
 SRC_DIRS := src src/canvas src/support_classes
 INCLUDE_DIRS := $(addprefix -I,$(SRC_DIRS))
-CFLAGS := -Wall -Wextra $(INCLUDE_DIRS) -fPIC
-LINKFLAGS := -Wl,-rpath,. -lglad -lglfw3 -lpthread -framework Cocoa -framework OpenGL -framework IOKit -framework CoreFoundation -framework CoreVideo
+CFLAGS := -Wall -Wextra $(INCLUDE_DIRS)
+ARCHIVER_FLAGS=rcs
+LINKFLAGS := -L/Users/misha/bin/vcpkg/installed/x64-osx/lib/ -lglad -lglfw3 -lpthread -framework Cocoa -framework OpenGL -framework IOKit -framework CoreFoundation -framework CoreVideo
 
 #Test user input variables
 ifeq ($(BUILDTYPE), debug)
@@ -44,7 +47,8 @@ vpath %.h $(SRC_DIRS)
 #Archiving the objects into lib[name].a
 $(LIBDIR)/$(LIB_NAME): $(OBJDIR) $(LIBDIR) $(OBJS)
 	# $(ARCHIVER) $(ARCHIVER_FLAGS) $@ $(OBJDIR)/*.o
-	g++ -dynamiclib -o $@ $(OBJDIR)/*.o $(CFLAGS) $(LINKFLAGS)
+	
+
 
 #Force a compilation and linkage with certain flags
 force: clean $(OBJS) $(LIBDIR)/$(LIB_NAME)
@@ -65,7 +69,8 @@ verbose:
 #Uses second expansion to determine dependencies from .o.dep variables
 .SECONDEXPANSION:
 $(OBJDIR)/%.o: $$($$*.o.dep)
-	$(CC) -c $< -o $@ -std=$(STD) $(CFLAGS)
+	$(CC) -fPIC -c $< -o $@ -std=$(STD) $(CFLAGS)
+	# ld -v -r $@ -o $@ $(LINKFLAGS)
 
 *.cpp:
 *.h:
@@ -84,6 +89,3 @@ $(OBJDIR):
 
 $(LIBDIR):
 	mkdir $(LIBDIR)
-
-compile-test:
-	g++ test.cpp -o test -lmdcl -Llib -Wl,-rpath,./lib $(INCLUDE_DIRS) -std=c++11
