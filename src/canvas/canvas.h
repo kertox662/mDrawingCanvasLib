@@ -6,6 +6,7 @@
 #include <thread>
 #include <mutex>
 #include <unordered_set>
+#include "shader.h"
 
 //Forward declaration of the window from the GLFW library
 struct GLFWwindow;
@@ -16,6 +17,7 @@ namespace mdcl{
 class Image;
 class Font;
 class Color;
+class Shape;
 enum TextAlignment : unsigned char;
 
 struct WindowDimensions{
@@ -28,6 +30,9 @@ class Canvas{
 	std::string _title;
 	bool _completed;
 	int _frameRate;
+	std::vector<Shape*> _openShapes;
+	Color *_fill, *_outline;
+	Shader _shapeShader, _ellipseShader;
 	
 	static std::vector<std::thread> _s_canvasThreads;
 	static bool _s_glfwInitialized;
@@ -37,6 +42,7 @@ class Canvas{
 	public:
 	Canvas(int width, int height, std::string title);
 	Canvas(WindowDimensions dim, std::string title);
+	// ~Canvas();
 
 	//Properties
 	inline WindowDimensions getDimensions() const{ return _winDim;}
@@ -52,6 +58,7 @@ class Canvas{
 	private:
 	//Runs the first time a canvas is created
 	static void initializeCanvases();
+	void compileShaders();
 
 	protected:
 	//Main function definitions for the canvas.
@@ -71,21 +78,24 @@ class Canvas{
 	virtual void onUnfocus(){}
 
 	//Drawing functions
-	void rect(double x, double y, double width, double height);
+	void rect(float x, float y, float width, float height);
+	void rect(std::pair<float,float> p1, std::pair<float,float> p2);
+	void triangle(float x1, float y1, float x2, float y2, float x3, float y3);
+	void triangle(std::pair<float,float> p1, std::pair<float,float> p2, std::pair<float,float> p3);
 
-	void ellipse(double x, double y, double xRadius, double yRadius);
+	void ellipse(float x, float y, float xRadius, float yRadius);
+	void ellipse(std::pair<float,float> p1, std::pair<float,float> p2);
+	void circle(float x, float y, float radius);
 
-	void circle(double x, double y, double radius);
+	void line(float x1, float y1, float x2, float y2);
+	void line(std::pair<float,float> p1, std::pair<float,float> p2);
 
-	void line(double x1, double y1, double x2, double y2);
-
-	void text(std::string text, double x, double y);
-
-	void image(Image img, double x, double y);
+	void text(std::string text, float x, float y);
+	void image(Image img, float x, float y);
 
 	void beginShape();
 	void endShape();
-	void vertex(double x, double y);
+	void vertex(float x, float y);
 
 	//Colour Functions
 	void clear(Color*);

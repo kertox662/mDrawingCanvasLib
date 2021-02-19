@@ -13,6 +13,12 @@ inline float max(float a, float b){
 
 namespace mdcl{
 
+enum ColorType{
+    UnknownColorType,
+    RGBA,
+    HSBA
+};
+
 //An interface for representing colour
 class Color{
     public:
@@ -21,6 +27,7 @@ class Color{
     virtual unsigned char green() = 0;
     virtual unsigned char blue() = 0;
     virtual unsigned char alpha() = 0;
+    virtual ColorType getType() {return UnknownColorType;}
 
     virtual ~Color(){}
 }; //Class Color
@@ -29,7 +36,7 @@ class Color{
 class RGBColor : public Color{
     std::array<unsigned char, 4> _data;
     public:
-    RGBColor(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255):
+    RGBColor(unsigned char r=0, unsigned char g=0, unsigned char b=0, unsigned char a = 255):
         _data({r,g,b,a}){}
     
     unsigned char red() override {return _data[0];}
@@ -37,6 +44,8 @@ class RGBColor : public Color{
     unsigned char blue() override {return _data[2];}
     unsigned char alpha() override {return _data[3];}
     std::array<unsigned char, 4> getRGBA() override {return _data;}
+    ColorType getType() override {return RGBA;}
+
 }; //Class RGBColor
 
 //A class representing colours with a 360 degree hue, and percent saturation and brightness
@@ -87,6 +96,8 @@ class HSBColor : public Color{
     std::array<unsigned char, 4> getRGBA() override {
         return {red(), green(), blue(), a};
     }
+
+    ColorType getType() override {return HSBA;}
 }; //Class HSBColor
 
 } //namespace mdcl
