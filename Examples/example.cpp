@@ -1,6 +1,6 @@
 #include "canvas.h"
 #include "color.h"
-#include "map.h"
+#include "util.h"
 
 #include <cstdlib>
 #include <cmath>
@@ -20,7 +20,24 @@ class MyApp : public mdcl::Canvas{
         mdcl::HSBColor c(hue, 0.5, 0.5);
         clear(&c);
         hue++;
-        ellipse(300,300,100,200);
+        beginShape();
+        vertex(100,200);
+        vertex(200,250);
+        vertex(300,200);
+        vertex(400,50);
+        vertex(400,500);
+        vertex(500,550);
+        vertex(200,550);
+        vertex(300,300);
+        endShape();
+
+        beginShape();
+        vertex(50,50);
+        vertex(150,50);
+        vertex(50,150);
+        vertex(200,100);
+        vertex(150,150);
+        endShape();
     }
 
     void cleanup() override{

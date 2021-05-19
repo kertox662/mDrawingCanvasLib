@@ -3,7 +3,9 @@
 #include "GLCommon.h"
 #include "errorchecking.h"
 #include "color.h"
-#include "map.h"
+#include "util.h"
+
+#include <iostream>
 
 mdcl::Shape::Shape(){
     glGenBuffers(1,&_vboId);
@@ -39,7 +41,7 @@ float* mdcl::Shape::toArray(unsigned int* lenOut){
     return arr;
 }
 
-void mdcl::Shape::render(int width, int height, Shader& shapeShader){
+void mdcl::Shape::render(int width, int height, int thickness, Shader& shapeShader){
     unsigned int len;
     float* arr = toArray(&len);
     for(int i = 0; i < len; i++){
@@ -78,6 +80,37 @@ void mdcl::Shape::render(int width, int height, Shader& shapeShader){
     delete[] indices;
     if(GLCheckError("Shape IBO ")) return;
 
+    std::pair<float,float>* normals = new std::pair<float,float>[count];
+    float* borderPoints = new float[count*4];
+    float* borderIndices = new float[count*6];
+
+    for(int i = 0; i < count; i++){
+        unsigned int next = (i+1)%count;
+        std::pair<float,float> direction = std::pair<float,float>{arr[2*next] - arr[2*i],
+                                                                  arr[2*next+1] - arr[2*i+1]};
+        normals[i].first = -direction.second;
+        normals[i].second = direction.first;
+
+        float magSq = normals[i].first * normals[i].first + normals[i].second * normals[i].second;
+        float normalizeFactor = invSqrt(magSq) * thickness * 0.5f;
+        normals[i].first *= normalizeFactor;
+        normals[i].second *= normalizeFactor;
+    }
+
+    for(int i = 0; i < count; i++){
+        unsigned int next = (i+1)%count;
+        borderPoints[4*i]   = arr[2*i]   + normals[i].first + normals[next].first;
+        borderPoints[4*i+1] = arr[2*i+1] + normals[i].second + normals[next].second;
+        borderPoints[4*i+2] = arr[2*i]   - normals[i].first - normals[next].first;
+        borderPoints[4*i+3] = arr[2*i+1] - normals[i].second - normals[next].second;
+        
+        borderIndices[6*i]   = 2*i;
+        borderIndices[6*i+1] = 2*next;
+        borderIndices[6*i+2] = 2*next+1;
+        borderIndices[6*i+3] = 2*i;
+        borderIndices[6*i+4] = 2*i+1;
+        borderIndices[6*i+5] = 2*next+1;
+    }
 
     
     // std::string name = "u_Color";
@@ -99,5 +132,7 @@ void mdcl::Shape::render(int width, int height, Shader& shapeShader){
     glDrawElements(GL_TRIANGLE_FAN, count, GL_UNSIGNED_INT, nullptr);
 
     if(GLCheckError("Shape Draw ")) return;
+
+
 
 }

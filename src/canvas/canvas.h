@@ -32,6 +32,7 @@ class Canvas{
 	int _frameRate;
 	std::vector<Shape*> _openShapes;
 	Color *_fill, *_outline;
+	float _outlineThickness;
 	Shader _shapeShader, _ellipseShader;
 	
 	static std::vector<std::thread> _s_canvasThreads;

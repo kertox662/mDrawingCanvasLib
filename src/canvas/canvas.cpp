@@ -96,7 +96,7 @@ void Canvas::canvasLoop(){
 	compileShaders();
 	init();
 	int frames = 60, interval = 1000000/_frameRate;
-	auto tp = high_resolution_clock::now();
+	auto tp = high_resolution_clock::now(); //Time Point
 
 	// Keep looping while the window be open.
 	while(!glfwWindowShouldClose(_window)){
@@ -107,7 +107,7 @@ void Canvas::canvasLoop(){
 		}
 		glfwSwapBuffers(_window); //Show Render;
 
-		// Wait for end of interval
+		// Wait for end of interval (based on framerate)
 		auto end = high_resolution_clock::now();
 		duration<double> dur = end-tp;
 		auto d = duration_cast<microseconds>(dur);
@@ -152,14 +152,14 @@ void Canvas::runEventLoop(){
 			_s_windows.erase(*it);
 		}
 
-		//Waits for time until interval finishes.
-		auto end = high_resolution_clock::now();
-		duration<double> dur = end-tp;
-		auto d = duration_cast<microseconds>(dur);
-		// std::cout << "Time:" << d.count() << "us" << std::endl;
-		if(interval > d.count())
-			usleep(interval - d.count());
-		tp = end;
+		//Waits for time until interval finishes. (Not Sure if Needed)
+		// auto end = high_resolution_clock::now();
+		// duration<double> dur = end-tp;
+		// auto d = duration_cast<microseconds>(dur);
+		// // std::cout << "Time:" << d.count() << "us" << std::endl;
+		// if(interval > d.count())
+		// 	usleep(interval - d.count());
+		// tp = end;
 	}
 
 	//When all canvases are done, wait for threads to finish and terminate glfw.
